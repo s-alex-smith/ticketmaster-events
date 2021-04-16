@@ -72,9 +72,9 @@ const StyledInput = styled.input`
   }
 `;
 
-const StyledButton = styled.div`
+const StyledButton = styled.button`
 margin: 2rem;
-padding: 0.5rem 3rem;
+padding: 0.3rem 3rem;
 cursor: pointer;
 border: 0.1rem solid grey;
 border-radius: 5rem;
@@ -90,11 +90,18 @@ margin-top: 2rem;
 }
 `;
 
+const StyledErrorMessage = styled.span`
+color: #C6362F;
+border: 0.2rem solid #C6362F;
+margin-top: 1rem;
+`;
+
 const HomeScreen = () => {
   const [artistValue, setArtistValue] = useState("");
   const [cityValue, setCityValue] = useState("");
   const [venueValue, setVenueValue] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
 
 let history = useHistory();
@@ -106,6 +113,7 @@ const handleSubmit = async (event) => {
         const searchData = { artistValue, venueValue, cityValue };
             history.push("/results", {searchData})
       } else {
+        setShowErrorMessage(true);
         setErrorMessage("At least one search field must be filled");
       }
     } catch (error) {
@@ -131,11 +139,13 @@ const handleSubmit = async (event) => {
             <StyledTitle>City</StyledTitle>
             <StyledInput label="City" type="text" value={cityValue} onChange={(text) => setCityValue(text.text)} />
             </StyledArea>
-            <p>{errorMessage}</p>
-              {/* <StyledButton handleSubmit={handleSubmit>
-                  Show me some gigs!
-              </StyledButton> */}
-              <button onClick={handleSubmit}>Show me some gigs!</button>
+            {showErrorMessage && (
+            <StyledErrorMessage>
+                {errorMessage}
+            </StyledErrorMessage>
+            )
+            }
+          <StyledButton onClick={handleSubmit}>Show me some gigs!</StyledButton>
          </StyledView>
         </StyledPage>
      );
