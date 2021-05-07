@@ -111,7 +111,7 @@ const handleSubmit = async (event) => {
     try {
       if (artistValue !== "" || cityValue !== "" || venueValue !== "") {
         const searchData = { artistValue, venueValue, cityValue };
-            history.push("/results", {searchData})
+            history.push("/results", searchData);
       } else {
         setShowErrorMessage(true);
         setErrorMessage("At least one search field must be filled");
@@ -120,8 +120,19 @@ const handleSubmit = async (event) => {
       console.log(console.error);
     }
 
+};
+
+const updateArtistValue = newArtist => {
+  setArtistValue(newArtist.target.value);
 }
 
+const updateVenueValue = newVenue => {
+  setVenueValue(newVenue.target.value);
+}
+
+const updateCityValue = newCity => {
+  setCityValue(newCity.target.value)
+}
 
     return (
       <StyledPage>
@@ -129,15 +140,15 @@ const handleSubmit = async (event) => {
             <StyledTitle>What's on?</StyledTitle>
             <StyledArea>
               <StyledTitle>Artist</StyledTitle>
-              <StyledInput label="Artist" value={artistValue} onChange={text => setArtistValue(text.text)} />
+              <StyledInput label="Artist" value={artistValue} onChange={updateArtistValue} />
             </StyledArea>
             <StyledArea>
               <StyledTitle>Venue</StyledTitle>
-              <StyledInput label="Venue" type="text" value={venueValue} onChange={(text) => setVenueValue(text.text)}/>
+              <StyledInput label="Venue" type="text" value={venueValue} onChange={updateVenueValue}/>
             </StyledArea>
             <StyledArea>
             <StyledTitle>City</StyledTitle>
-            <StyledInput label="City" type="text" value={cityValue} onChange={(text) => setCityValue(text.text)} />
+            <StyledInput label="City" type="text" value={cityValue} onChange={updateCityValue} />
             </StyledArea>
             {showErrorMessage && (
             <StyledErrorMessage>

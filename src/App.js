@@ -5,7 +5,7 @@ import {
   Route
 } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
-import ResultsScreen from "./screens/ResultsScreen.js";
+import ResultsScreen from "./screens/ResultsScreen";
 
 
 export default function App() {
