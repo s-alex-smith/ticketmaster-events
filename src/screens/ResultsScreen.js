@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import styled from 'styled-components/macro';
 import { getEvents, getEventsByGenre } from "../apiRequests/apiRequests";
-import { ActivityIndicator, Image } from "react-native"
+import { ActivityIndicator } from "react-native";
+import DropDownMenu from '../Components/DropDownMenu';
 
 const StyledPage = styled.div`
 background-color: #223843;
@@ -114,11 +115,14 @@ const ResultsScreen = () => {
     const [page, setPage] = useState(0);
     const [events, updateEvents] = useState([]);
     const [isLoading, updateIsLoading] = useState(true);
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const dropdownRef = useRef(null);
 
     const location = useLocation();
     const history = useHistory();
 
-    let genreArr = [{ value: "All" }];
+    let genreArr = [];
 
     const dateFormatting = date => {
       let splitDate = date.split('-')
@@ -138,7 +142,14 @@ const ResultsScreen = () => {
       setPage(page - 1);
       updateIsLoading(true);
     };
-    
+
+    // const onClick = (item) => {
+    //   setFilteredEvents(item)
+    // }
+
+    const toggleDropDown = () => {
+      setIsExpanded(!isExpanded)
+    }
     useEffect(() => {
         if (filteredEvents !== "All") {
           getEventsByGenre(location.state.artistValue, location.state.cityValue, location.state.venueValue, filteredEvents, page)
@@ -151,24 +162,21 @@ const ResultsScreen = () => {
           getEvents(location.state.artistValue, location.state.cityValue, location.state.venueValue, page)
             .then((res) => {
               updateEvents(res);
+            })
+            .then(() => {
               events.forEach((event) => {
-                genreArr.push({ value: event.classifications[0].genre.name });
+                genreArr.push(event.classifications[0].genre.name);
               });
-              let obj = {};
-              for (let i = 0; i < genreArr.length; i++)
-                obj[genreArr[i]["value"]] = genreArr[i];
-              let unique = new Array();
-              for (let key in obj) unique.push(obj[key]);
+              const unique = genreArr.filter((v, i, a) => a.indexOf(v) === i)
               setGenres(unique);
+              console.log(genres)
             })
             .then(() => {
               updateIsLoading(false);
             })
             .catch((err) => console.log(err));
         }
-      }, [location, filteredEvents, page]);
-
-    
+      }, [location, filteredEvents, page, isExpanded]);
 
 if (isLoading) {
   return  (
@@ -194,6 +202,7 @@ if (isLoading) {
         <StyledTitle>
           Your results!
         </StyledTitle>
+        <DropDownMenu onClick={toggleDropDown} isExpanded={isExpanded} items={genres} title="Genres" />
        {events.map((event) => {
          return (
            <StyledView key={event.id}>

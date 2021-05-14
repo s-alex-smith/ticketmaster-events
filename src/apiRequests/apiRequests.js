@@ -6,7 +6,7 @@ const url = `https://app.ticketmaster.com/discovery/v2/events?apikey=${apiKey}&l
 
 export const getEvents = (artist, city, venue, page) => {
     return axios
-      .get(`${url}&keyword=${artist}%20${venue}&city=${city}`)
+      .get(`${url}&keyword=${artist}%20${venue}&city=${city}&page=${page}`)
       .then((response) => {
         return response.data._embedded.events;
       })
