@@ -13,9 +13,10 @@ export const getEvents = (artist, city, venue, page) => {
       .catch((err) => console.log(err));
   };
 
+
 export const getEventsByGenre = (artist, city, venue, genre, page) => {
   return axios
-    .get(
+  .get(
       `${url}&keyword=${artist}%20${venue}&city=${city}&classificationName=${genre}&page=${page}`
     )
     .then((response) => {

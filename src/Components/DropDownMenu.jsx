@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components/macro';
-import {string, bool, func, array} from 'prop-types';
+import {string, bool, func, array, obj} from 'prop-types';
+import useDetectOutsideClick from './middleware';
 
 const StyledDropDownContainer = styled.div`
 margin-top: 1rem;
@@ -42,22 +43,22 @@ list-style-type: none;
 margin: 0.4rem;
 border-bottom: 0.12rem solid #DBD3D8;
 padding-bottom: 0.15rem;
+cursor: pointer;
 `;
 
-const DropDownMenu = ({onClick, isExpanded, items, title}) => {
-   const dropdownRef = useRef(null);
+const DropDownMenu = ({onExpand, isExpanded, items, title, onFilter}) => {
   
     return (
         <StyledDropDownContainer className="menu-container">
-        <StyledDropDownButton onClick={onClick} className="menu-trigger">
+        <StyledDropDownButton onClick={onExpand} className="menu-trigger">
           <StyledDropDownHeader>{title}</StyledDropDownHeader>
         </StyledDropDownButton>
           { isExpanded ? 
-        (<StyledDropDownListContainer ref={dropdownRef} items={items}>
+        (<StyledDropDownListContainer items={items}>
             { items.map((item) => {
                 return (
-                    <StyledDropDownButton onClick={onClick} key={item.id}>
-                    <StyledDropDownListItems>{item}</StyledDropDownListItems>
+                    <StyledDropDownButton onClick={onFilter} key={item}>
+                    <StyledDropDownListItems >{item}</StyledDropDownListItems>
                     </StyledDropDownButton>
                     )
             })
@@ -70,20 +71,18 @@ const DropDownMenu = ({onClick, isExpanded, items, title}) => {
 
 DropDownMenu.propTypes = {
     title: string,
-    onClick: func,
-    item: string,
+    onExpand: func,
     isExpanded: bool,
     items: array,
-    toggle: func
+    onFilter: func
 };
 
 DropDownMenu.defaultProps = {
     title: "",
-    onClick: () => {},
-    item: "",
+    onExpand: () => {},
     isExpanded: false,
     items: [],
-    toggle: () => {}
+    onFilter: () => {}
 };
 
 export default DropDownMenu

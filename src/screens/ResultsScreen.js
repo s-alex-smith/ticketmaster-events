@@ -4,6 +4,7 @@ import styled from 'styled-components/macro';
 import { getEvents, getEventsByGenre } from "../apiRequests/apiRequests";
 import { ActivityIndicator } from "react-native";
 import DropDownMenu from '../Components/DropDownMenu';
+import useDetectOutsideClick from '../Components/middleware';
 
 const StyledPage = styled.div`
 background-color: #223843;
@@ -110,14 +111,14 @@ padding: 1rem;
 
 
 const ResultsScreen = () => {
+  const dropdownRef = useRef(null);
     const [genres, setGenres] = useState([]);
-    const [filteredEvents, setFilteredEvents] = useState("All");
+    const [filteredEvents, setFilteredEvents] = useState('All');
     const [page, setPage] = useState(0);
     const [events, updateEvents] = useState([]);
     const [isLoading, updateIsLoading] = useState(true);
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useDetectOutsideClick(dropdownRef, false);
 
-    const dropdownRef = useRef(null);
 
     const location = useLocation();
     const history = useHistory();
@@ -128,28 +129,31 @@ const ResultsScreen = () => {
       let splitDate = date.split('-')
       return `${splitDate[2]}/${splitDate[1]}/${splitDate[0]}`
     };
-
+    
     const handleBack = () => {
       history.push("/");
     }
 
-    const handleMore = (event) => {
+    const handleMore = () => {
       setPage(page + 1);
       updateIsLoading(true);
     };
 
-    const handleLess = (event) => {
+    const handleLess = () => {
       setPage(page - 1);
       updateIsLoading(true);
     };
 
-    // const onClick = (item) => {
-    //   setFilteredEvents(item)
-    // }
+    const handleFilter = (event) => {
+      let filterGenre = event.target.firstChild
+      setFilteredEvents(filterGenre.data)
+      setIsExpanded(false)
+    }
 
     const toggleDropDown = () => {
       setIsExpanded(!isExpanded)
     }
+
     useEffect(() => {
         if (filteredEvents !== "All") {
           getEventsByGenre(location.state.artistValue, location.state.cityValue, location.state.venueValue, filteredEvents, page)
@@ -165,17 +169,18 @@ const ResultsScreen = () => {
             })
             .then(() => {
               events.forEach((event) => {
-                genreArr.push(event.classifications[0].genre.name);
+                let genre = event.classifications[0].genre.name
+                genreArr.push(genre);
               });
-              const unique = genreArr.filter((v, i, a) => a.indexOf(v) === i)
+              const unique = Array.from(new Set(genreArr))
               setGenres(unique);
-              console.log(genres)
             })
             .then(() => {
               updateIsLoading(false);
             })
             .catch((err) => console.log(err));
         }
+
       }, [location, filteredEvents, page, isExpanded]);
 
 if (isLoading) {
@@ -202,7 +207,7 @@ if (isLoading) {
         <StyledTitle>
           Your results!
         </StyledTitle>
-        <DropDownMenu onClick={toggleDropDown} isExpanded={isExpanded} items={genres} title="Genres" />
+        <DropDownMenu onExpand={toggleDropDown} isExpanded={isExpanded} items={genres} title="Genres" onFilter={handleFilter}/>
        {events.map((event) => {
          return (
            <StyledView key={event.id}>
