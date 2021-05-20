@@ -4,7 +4,6 @@ import styled from 'styled-components/macro';
 import { getEvents, getEventsByGenre } from "../apiRequests/apiRequests";
 import { ActivityIndicator } from "react-native";
 import DropDownMenu from '../Components/DropDownMenu';
-import useDetectOutsideClick from '../Components/middleware';
 
 const StyledPage = styled.div`
 background-color: #223843;
@@ -117,7 +116,7 @@ const ResultsScreen = () => {
     const [page, setPage] = useState(0);
     const [events, updateEvents] = useState([]);
     const [isLoading, updateIsLoading] = useState(true);
-    const [isExpanded, setIsExpanded] = useDetectOutsideClick(dropdownRef, false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
 
     const location = useLocation();
