@@ -1,7 +1,6 @@
-import { key } from "./apiKey";
 const axios = require("axios");
 
-const apiKey = key.ticketMasterKey;
+const apiKey = process.env.REACT_APP_TICKETMASTER_API_KEY;
 const url = `https://app.ticketmaster.com/discovery/v2/events?apikey=${apiKey}&locale=*&countryCode=GB&segmentName=music&size=10`;
 
 export const getEvents = (artist, city, venue, page) => {

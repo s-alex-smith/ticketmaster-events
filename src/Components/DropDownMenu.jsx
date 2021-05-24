@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components/macro';
-import {string, bool, func, array, obj} from 'prop-types';
+import {string, bool, func, array} from 'prop-types';
 
 const StyledDropDownContainer = styled.div`
 margin-top: 1rem;

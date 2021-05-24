@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState} from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import styled from 'styled-components/macro';
 import { getEvents, getEventsByGenre } from "../apiRequests/apiRequests";
@@ -110,7 +110,6 @@ padding: 1rem;
 
 
 const ResultsScreen = () => {
-  const dropdownRef = useRef(null);
     const [genres, setGenres] = useState([]);
     const [filteredEvents, setFilteredEvents] = useState('All');
     const [page, setPage] = useState(0);
@@ -179,7 +178,6 @@ const ResultsScreen = () => {
             })
             .catch((err) => console.log(err));
         }
-
       }, [location, filteredEvents, page, isExpanded]);
 
 if (isLoading) {

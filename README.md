@@ -38,3 +38,5 @@ You will now be able to run the project locally on your desktop. Any amendments 
 
 * Implement added genre search function within initial search form to improve user experience and allow users to see only the events they are interested in straight away.
 * Infinite scrolling
+* Closing the dropdown menu when clicking outside of the menu
+* Add unit tests
